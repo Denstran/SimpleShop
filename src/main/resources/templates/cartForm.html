@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Your Website</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Header -->
+<header class="container-fluid bg-light p-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <h1>Site Name</h1>
+      </div>
+      <div class="col-6 text-end">
+        <p>Your cart: <th:block th:text="${totalAmount}"></th:block> item(s),
+          <th:block th:text="${totalPrice}"></th:block>  RUB</p>
+        <a class="btn btn-primary" th:href="@{'/cart'}" role="button">Checkout</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content (Cart) -->
+<div class="container mt-4">
+
+  <!-- Cart Table and Product Types -->
+  <div class="row">
+    <!-- Product Categories (Left column) -->
+    <div class="col-3">
+      <h2>Product Types</h2>
+      <ul class="list-group">
+        <li class="list-group-item"><a th:href="@{'/all?keyword=HOME'}">HOME</a></li>
+        <li class="list-group-item"><a th:href="@{'/all?keyword=CHESS'}">CHESS</a></li>
+        <li class="list-group-item"><a th:href="@{'/all?keyword=SPORTS'}">SPORT</a></li>
+        <li class="list-group-item"><a th:href="@{'/all?keyword=WATERSPORTS'}">WATERSPORTS</a></li>
+      </ul>
+    </div>
+
+    <!-- Cart Table (Right column) -->
+    <div class="col-9">
+      <h2>Your Cart</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Total Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Sample Cart Item -->
+          <tr th:each="item : ${productCart}">
+            <td th:text="${item.getValue()}">2</td>
+            <td th:text="${item.getKey().productName}">Product Name</td>
+            <td th:text="${item.getKey().productPrice}">$19.99</td>
+            <th:block th:with="result=${item.getKey().productPrice * item.getValue()}">
+              <td th:text="${result}">41</td>
+            </th:block>
+            <td>
+              <form th:action="@{'/cart/remove?productId='+ ${item.getKey().id}}" method="post">
+                <button type="submit" class="btn btn-danger">Remove</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Continue Shopping and Checkout Now Buttons -->
+  <div class="row mt-4">
+    <div class="col text-center">
+      <a class="btn btn-primary" th:href="@{'/all'}" role="button">Continue shopping</a>
+      <a class="btn btn-primary" th:href="@{'/cart/checkout'}"
+         th:if="${productCart.size() > 0}" role="button">Checkout Now</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
